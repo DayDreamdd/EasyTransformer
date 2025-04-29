@@ -1,11 +1,11 @@
 ﻿using EasyTransformer;
 
 // 假设用户输入
-string userInput = "你 爱 什么";
+string userInput = "我 喜欢 编程";
 string[] userWords = userInput.Split(' ');
 
 // 假设有以下候选内容
-string[] candidates = { "我 喜欢 吃 苹果", "我 爱 中国", "我 喜欢 跳舞" };
+string[] candidates = { "我 喜欢 足球", "我 喜欢 看 电影", "我 不喜欢 跑步", "我 爱 编程" };
 
 // 获取用户输入句子的向量表示
 double[] userSentenceEmbedding = Embedding.GetSentenceEmbedding(userInput);

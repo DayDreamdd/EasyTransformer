@@ -19,21 +19,15 @@ namespace EasyTransformer
 
             switch (word)
             {
-                case "我": return new double[] { 0.1, 0.4, -0.2 };
-                case "喜欢": return new double[] { 0.2, 0.5, 0.3 };
-                case "吃": return new double[] { 0.4, 0.1, 0.6 };
-                case "苹果": return new double[] { 0.7, 0.3, 0.2 };
-                case "爱": return new double[] { 0.6, 0.4, 0.2 };
-                case "中国": return new double[] { 0.8, 0.5, 0.3 };
-                case "跳舞": return new double[] { 0.4, 0.6, 0.5 };
-                case "你好": return new double[] { 0.3, 0.7, 0.1 };
-                case "世界": return new double[] { 0.5, 0.2, 0.4 };
-                case "学习": return new double[] { 0.6, 0.3, 0.7 };
-                case "编程": return new double[] { 0.2, 0.8, 0.5 };
-                case "快乐": return new double[] { 0.7, 0.6, 0.4 };
-                case "工作": return new double[] { 0.5, 0.4, 0.3 };
-                case "生活": return new double[] { 0.3, 0.5, 0.6 };
-                case "朋友": return new double[] { 0.4, 0.7, 0.2 };
+                case "我": return new double[] { 0.1, 0.2, 0.3 };
+                case "喜欢": return new double[] { 0.6, 0.7, 0.8 };
+                case "足球": return new double[] { 0.9, 0.4, 0.3 };
+                case "看电影": return new double[] { 0.3, 0.6, 0.2 };
+                case "跑步": return new double[] { 0.2, 0.5, 0.7 };
+                case "不喜欢": return new double[] { 0.4, 0.2, 0.5 };
+                case "编程": return new double[] { 0.8, 0.9, 0.7 };
+                case "什么": return new double[] { 0.2, 0.1, 0.3 };
+                case "爱": return new double[] { 0.6, 0.7, 0.75 }; // "爱" 的向量与 "喜欢" 非常接近
                 default: return new double[] { 0.0, 0.0, 0.0 };
             }
         }
@@ -52,10 +46,11 @@ namespace EasyTransformer
             // 通过自注意力机制来更新每个词的表示
             double[][] updatedEmbeddings = SelfAttention.ApplySelfAttention(wordEmbeddings);
 
-            // 初始化句子向量，长度与更新后的词向量一致
+            // 计算句子的加权或平均向量
             double[] sentenceEmbedding = new double[updatedEmbeddings[0].Length];
 
-            foreach (double[] embedding in wordEmbeddings)
+            // 累加所有词的向量
+            foreach (var embedding in updatedEmbeddings)
             {
                 for (int i = 0; i < sentenceEmbedding.Length; i++)
                 {
@@ -63,9 +58,10 @@ namespace EasyTransformer
                 }
             }
 
+            // 平均化所有词的向量，得到句子级别的向量表示
             for (int i = 0; i < sentenceEmbedding.Length; i++)
             {
-                sentenceEmbedding[i] /= wordEmbeddings.Length;
+                sentenceEmbedding[i] /= updatedEmbeddings.Length;
             }
 
             return sentenceEmbedding;
