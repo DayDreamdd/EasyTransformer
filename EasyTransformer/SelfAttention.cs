@@ -33,7 +33,17 @@
         public static double[] Attention(double[] query, double[][] keys, double[][] values)
         {
             // 计算向量内积
-            double[] scores = keys.Select(key => query.Zip(key, (q, k) => q * k).Sum()).ToArray();
+            double[] scores = new double[keys.Length];
+            for (int i = 0; i < keys.Length; i++)
+            {
+                scores[i] = 0;
+                for (int j = 0; j < query.Length; j++)
+                {
+                    scores[i] += query[j] * keys[i][j]; // 计算 query 和 key 的内积
+                }
+            }
+
+
             // 内积的相似度归一化
             double[] attentionWeights = Softmax(scores);
             // 加权求和运算
