@@ -43,8 +43,15 @@ namespace EasyTransformer
 
             double[][] wordEmbeddings = words.Select(word => GetWordEmbedding(word)).ToArray();
 
+            // 为每个词加上位置编码
+            for (int i = 0; i < wordEmbeddings.Length; i++)
+            {
+                double[] positionEncoding = Position.PositionEncoding(i, wordEmbeddings[0].Length);
+                wordEmbeddings[i] = wordEmbeddings[i].Zip(positionEncoding, (w, p) => w + p).ToArray();
+            }
+
             // 通过自注意力机制来更新每个词的表示
-            double[][] updatedEmbeddings = SelfAttention.ApplySelfAttention(wordEmbeddings);
+            double[][] updatedEmbeddings = EncoderLayer.ApplyEncoderLayer(wordEmbeddings);
 
             // 计算句子的加权或平均向量
             double[] sentenceEmbedding = new double[updatedEmbeddings[0].Length];
