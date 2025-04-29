@@ -5,6 +5,24 @@
     /// </summary>
     class SelfAttention
     {
+        public static double[][] ApplySelfAttention(double[][] wordEmbeddings)
+        {
+            int length = wordEmbeddings.Length;
+            double[][] updatedEmbeddings = new double[length][];
+
+            for (int i = 0; i < length; i++)
+            {
+                double[] query = wordEmbeddings[i];
+                double[][] keys = wordEmbeddings;
+                double[][] values = wordEmbeddings;
+
+                // 计算注意力输出
+                double[] attentionOutput = Attention(query, keys, values);
+                updatedEmbeddings[i] = attentionOutput;
+            }
+            return updatedEmbeddings;
+        }
+
         /// <summary>
         /// 注意力机制
         /// </summary>

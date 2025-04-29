@@ -47,10 +47,15 @@ namespace EasyTransformer
         {
             string[] words = sentence.Split(' ');
 
-            double[][] embeddings = words.Select(word => GetWordEmbedding(word)).ToArray();
-            double[] sentenceEmbedding = new double[embeddings[0].Length];
+            double[][] wordEmbeddings = words.Select(word => GetWordEmbedding(word)).ToArray();
 
-            foreach (double[] embedding in embeddings)
+            // 通过自注意力机制来更新每个词的表示
+            double[][] updatedEmbeddings = SelfAttention.ApplySelfAttention(wordEmbeddings);
+
+            // 初始化句子向量，长度与更新后的词向量一致
+            double[] sentenceEmbedding = new double[updatedEmbeddings[0].Length];
+
+            foreach (double[] embedding in wordEmbeddings)
             {
                 for (int i = 0; i < sentenceEmbedding.Length; i++)
                 {
@@ -60,7 +65,7 @@ namespace EasyTransformer
 
             for (int i = 0; i < sentenceEmbedding.Length; i++)
             {
-                sentenceEmbedding[i] /= embeddings.Length;
+                sentenceEmbedding[i] /= wordEmbeddings.Length;
             }
 
             return sentenceEmbedding;
